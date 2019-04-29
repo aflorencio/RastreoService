@@ -7,8 +7,9 @@ using System.Web;
 
 namespace RastreoService.Core.DB.Models
 {
-    public class Keyword
+    public class Link
     {
+        public ObjectId _id { get; set; }
         [BsonIgnoreIfNull]
         public string impacto { get; set; }
         [BsonIgnoreIfNull]
@@ -19,18 +20,28 @@ namespace RastreoService.Core.DB.Models
         public string idioma { get; set; }
         [BsonIgnoreIfNull]
         public string url { get; set; }
+        [BsonIgnoreIfNull]
+        public string status { get; set; }
+        [BsonIgnoreIfNull]
+        public string originalPDF { get; set; }
+        [BsonIgnoreIfNull]
+        public string finalPDF { get; set; }
     }
 
     [BsonIgnoreExtraElements]
     public class RastreoDBModel
     {
         public ObjectId _id { get; set; }
+        [BsonIgnoreIfNull]
         public string idContactoService { get; set; }
         [BsonIgnoreIfNull]
         public bool finalizado { get; set; }
+        [BsonIgnoreIfNull]
         public string idTicketService { get; set; }
         [BsonIgnoreIfNull]
-        public List<Keyword> keywords { get; set; }
+        public string keyWord { get; set; }
+        [BsonIgnoreIfNull]
+        public List<Link> links { get; set; }
     }
 
 }

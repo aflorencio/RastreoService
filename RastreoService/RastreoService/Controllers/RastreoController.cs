@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -45,11 +46,35 @@ namespace RastreoService.Controllers
             data.idContactoService = value.Get("idContactoService");
             data.finalizado = value.Get("finalizado") == "true" ? true : false;
             data.idTicketService = value.Get("idTicketService");
+            data.keyWord = value.Get("keyWord");
 
             _.CreateContacto(data);
 
             return "OK!";
         }
+
+        // POST: api/Rastreo/ID
+        [HttpPost]
+        [Route("api/Rastreo/{id}")]
+        public string Post(string id, FormDataCollection value)
+        {
+
+            Core.DB.Models.Link linkes = new Core.DB.Models.Link();
+
+            linkes.url = value.Get("url");
+            linkes.comentario = value.Get("comentario");
+            linkes.categoria = value.Get("categoria");
+            linkes.status = value.Get("status");
+            linkes.originalPDF = value.Get("originalPDF");
+            linkes.finalPDF = value.Get("finalPDF");
+            linkes._id = ObjectId.GenerateNewId();
+            linkes.impacto = "50";
+            linkes.idioma = value.Get("idioma");
+
+            _.AddLink(linkes, id);
+            return "OK";
+        }
+
 
         #endregion
 

@@ -30,6 +30,17 @@ namespace RastreoService.Core.DB.Query
             await _rastreoCollection.InsertOneAsync(user);
         }
 
+        public async Task AddLink(Core.DB.Models.Link dataLink, string id)
+        {
+
+            var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq(e => e._id, ObjectId.Parse(id));
+
+            var update = Builders<Core.DB.Models.RastreoDBModel>.Update.Push<Core.DB.Models.Link>(e => e.links, dataLink);
+
+            await _rastreoCollection.FindOneAndUpdateAsync(filter, update);
+
+        }
+
 
         #endregion
 

@@ -19,6 +19,15 @@ namespace RastreoService.Core
             return "OK!";
         }
 
+        public void AddLink(Core.DB.Models.Link link, string rastreoID)
+        {
+
+            Core.DB.Query.RastreoQuery qAddLink = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
+            qAddLink.AddLink(link, rastreoID);
+
+        }
+
+
         #endregion
 
         #region READ
