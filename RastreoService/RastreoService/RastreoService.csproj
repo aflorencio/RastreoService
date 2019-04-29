@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Core\MainCore.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -102,6 +103,10 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Core\DB\Models\" />
+    <Folder Include="Core\DB\Query\" />
+    <Folder Include="Core\Lib\" />
+    <Folder Include="Core\Models\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
