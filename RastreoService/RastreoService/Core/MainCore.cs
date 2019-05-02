@@ -15,7 +15,7 @@ namespace RastreoService.Core
             Core.DB.Query.RastreoQuery qCreate = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
             //qCreate.Create(data); //El metodo antiguo que funciona
-            qCreate.InsertUser(data);//Nuevo metodo
+            qCreate.InserRastreo(data);//Nuevo metodo
             return "OK!";
         }
 
@@ -35,7 +35,7 @@ namespace RastreoService.Core
         {
             Core.DB.Query.RastreoQuery qReadAll = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
-            return qReadAll.GetAllUsers();//Nuevo metodo
+            return qReadAll.GetAllRastreo();//Nuevo metodo
         }
 
         public Core.DB.Models.RastreoDBModel ReadId(string id)
@@ -43,7 +43,7 @@ namespace RastreoService.Core
 
             Core.DB.Query.RastreoQuery qReadId = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
-            var data = qReadId.GetUsersById(id);
+            var data = qReadId.GetRastreoById(id);
             return data;
         }
 
@@ -51,7 +51,7 @@ namespace RastreoService.Core
         {
             Core.DB.Query.RastreoQuery qReadId = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
-            var data = qReadId.GetUsersByField(fieldName, fieldValue);
+            var data = qReadId.GetRastreoByField(fieldName, fieldValue);
             return data;
 
         }
@@ -62,7 +62,7 @@ namespace RastreoService.Core
         {
 
             Core.DB.Query.RastreoQuery qUpdate = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
-            qUpdate.UpdateUser(id, updateFieldName, updateFieldValue);
+            qUpdate.UpdateRastreo(id, updateFieldName, updateFieldValue);
 
         }
 
@@ -73,7 +73,7 @@ namespace RastreoService.Core
         public void Delete(string id)
         {
             Core.DB.Query.RastreoQuery qDelete = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
-            qDelete.DeleteUserById(id);
+            qDelete.DeleteRastreoById(id);
         }
 
         #endregion

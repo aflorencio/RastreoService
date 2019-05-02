@@ -25,9 +25,9 @@ namespace RastreoService.Core.DB.Query
 
         #region CREATE
 
-        public async Task InsertUser(Core.DB.Models.RastreoDBModel user) //CREATE
+        public async Task InserRastreo(Core.DB.Models.RastreoDBModel rastreo) //CREATE
         {
-            await _rastreoCollection.InsertOneAsync(user);
+            await _rastreoCollection.InsertOneAsync(rastreo);
         }
 
         public async Task AddLink(Core.DB.Models.Link dataLink, string id)
@@ -47,12 +47,12 @@ namespace RastreoService.Core.DB.Query
 
         #region READ
 
-        public List<Core.DB.Models.RastreoDBModel> GetAllUsers()
+        public List<Core.DB.Models.RastreoDBModel> GetAllRastreo()
         {
             return _rastreoCollection.Find(new BsonDocument()).ToList();
         }
 
-        public List<Core.DB.Models.RastreoDBModel> GetUsersByField(string fieldName, string fieldValue)
+        public List<Core.DB.Models.RastreoDBModel> GetRastreoByField(string fieldName, string fieldValue)
         {
             var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq(fieldName, fieldValue);
             var result = _rastreoCollection.Find(filter).ToList();
@@ -60,7 +60,7 @@ namespace RastreoService.Core.DB.Query
             return result;
         }
 
-        public Core.DB.Models.RastreoDBModel GetUsersById(string id)
+        public Core.DB.Models.RastreoDBModel GetRastreoById(string id)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace RastreoService.Core.DB.Query
             }
         }
 
-        public List<Core.DB.Models.RastreoDBModel> GetUsers(int startingFrom, int count) //ESTE CREO QUE NO SE ESTA USANDO
+        public List<Core.DB.Models.RastreoDBModel> GetRastreo(int startingFrom, int count) //ESTE CREO QUE NO SE ESTA USANDO
         {
             var result = _rastreoCollection.Find(new BsonDocument())
             .Skip(startingFrom)
@@ -88,7 +88,7 @@ namespace RastreoService.Core.DB.Query
 
         #region UPDATE
 
-        public bool UpdateUser(string id, string udateFieldName, string updateFieldValue)
+        public bool UpdateRastreo(string id, string udateFieldName, string updateFieldValue)
         {
             var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
             var update = Builders<Core.DB.Models.RastreoDBModel>.Update.Set(udateFieldName, updateFieldValue);
@@ -103,7 +103,7 @@ namespace RastreoService.Core.DB.Query
 
         #region DELETE
 
-        public bool DeleteUserById(string id)
+        public bool DeleteRastreoById(string id)
         {
             var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
             var result = _rastreoCollection.DeleteOne(filter);
