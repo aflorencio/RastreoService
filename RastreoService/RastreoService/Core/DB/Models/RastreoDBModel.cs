@@ -33,7 +33,7 @@ namespace RastreoService.Core.DB.Models
     {
         public ObjectId _id { get; set; }
         [BsonIgnoreIfNull]
-        public string idContactoService { get; set; }
+        public List<ObjectId> idContactoService { get; set; }
         [BsonIgnoreIfNull]
         public bool finalizado { get; set; }
         [BsonIgnoreIfNull]
