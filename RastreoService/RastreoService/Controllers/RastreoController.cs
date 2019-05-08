@@ -1,10 +1,12 @@
 ﻿using MongoDB.Bson;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace RastreoService.Controllers
@@ -26,9 +28,12 @@ namespace RastreoService.Controllers
         } //POR AHORA SOLO DE TODOS LOS CAMPOS BORRAR CUANDO ESTEN TODOS LOS DATOS DEL CONTROLADOR
 
         // GET: api/Rastreo/5
-        public string Get(int id)
+        public Core.DB.Models.RastreoDBModel Get(string id)
         {
-            return "value";
+            var data = _.ReadById(id);
+
+            return data;
+
         }
 
         #endregion
@@ -38,26 +43,34 @@ namespace RastreoService.Controllers
         // POST: api/Rastreo
         [HttpPost]
         [Route("api/rastreo")]
-        public string Post(FormDataCollection value)
+        public async Task<HttpResponseMessage> Post(HttpRequestMessage request)
         {
-            string[] words = value.Get("idContactoService").ToString().Split(',');
+            var jsonString = await request.Content.ReadAsStringAsync();
 
-            Core.DB.Models.RastreoDBModel data = new Core.DB.Models.RastreoDBModel();
-            List<ObjectId> contactoServiceList = new List<ObjectId>();
+            Core.DB.Models.RastreoDBModel account = JsonConvert.DeserializeObject<Core.DB.Models.RastreoDBModel>(jsonString);
+            _.Create(account);
 
-            foreach (string word in words)
-            {
-                contactoServiceList.Add(ObjectId.Parse(word));
-            }
-            
-            data.idContactoService = contactoServiceList;
-            data.finalizado = value.Get("finalizado") == "true" ? true : false;
-            data.idTicketService = value.Get("idTicketService");
-            data.keyWord = value.Get("keyWord");
+            return new HttpResponseMessage(HttpStatusCode.Created);
 
-            _.CreateContacto(data);
+            //string[] words = value.Get("idContactoService").ToString().Split(',');
 
-            return "OK!";
+            //Core.DB.Models.RastreoDBModel data = new Core.DB.Models.RastreoDBModel();
+            //List<ObjectId> contactoServiceList = new List<ObjectId>();
+
+            //foreach (string word in words)
+            //{
+            //    contactoServiceList.Add(ObjectId.Parse(word));
+            //}
+
+            //data.idContactoService = contactoServiceList;
+            //data.finalizado = value.Get("finalizado") == "true" ? true : false;
+            //data.idTicketService = value.Get("idTicketService");
+            //data.keyWord = value.Get("keyWord");
+
+            //_.CreateContacto(data);
+
+            //return "OK!";
+
         }
 
         // POST: api/Rastreo/ID
@@ -78,7 +91,7 @@ namespace RastreoService.Controllers
             linkes.impacto = "50";
             linkes.idioma = value.Get("idioma");
 
-            _.AddLink(linkes, id);
+            _.CreateToArray(linkes, id);
             return "OK";
         }
 
@@ -98,8 +111,9 @@ namespace RastreoService.Controllers
         #region DELETE
 
         // DELETE: api/Rastreo/5
-        public void Delete(int id)
+        public void Delete(string id)
         {
+            _.DeleteById(id);
         }
 
         #endregion

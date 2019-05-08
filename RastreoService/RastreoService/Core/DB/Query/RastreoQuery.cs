@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
+using DBModel = RastreoService.Core.DB.Models.RastreoDBModel;
+
 namespace RastreoService.Core.DB.Query
 {
     public class RastreoQuery
@@ -13,31 +15,31 @@ namespace RastreoService.Core.DB.Query
 
         private IMongoClient _client;
         private IMongoDatabase _database;
-        private IMongoCollection<Core.DB.Models.RastreoDBModel> _rastreoCollection;
+        private IMongoCollection<DBModel> _Collection;
 
         public RastreoQuery(string connectionString) //COSNTRUCTOR 
         {
             _client = new MongoClient(connectionString);
             _database = _client.GetDatabase("RastreoService");
-            _rastreoCollection = _database.GetCollection<Core.DB.Models.RastreoDBModel>("rastreo");
+            _Collection = _database.GetCollection<DBModel>("rastreo");
         }
 
 
         #region CREATE
 
-        public async Task InserRastreo(Core.DB.Models.RastreoDBModel rastreo) //CREATE
+        public async Task Create(DBModel rastreo) //CREATE
         {
-            await _rastreoCollection.InsertOneAsync(rastreo);
+            await _Collection.InsertOneAsync(rastreo);
         }
 
-        public async Task AddLink(Core.DB.Models.Link dataLink, string id)
+        public async Task CreateToArray(Core.DB.Models.Link dataLink, string id)
         {
 
-            var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq(e => e._id, ObjectId.Parse(id));
+            var filter = Builders<DBModel>.Filter.Eq(e => e._id, ObjectId.Parse(id));
 
-            var update = Builders<Core.DB.Models.RastreoDBModel>.Update.Push<Core.DB.Models.Link>(e => e.links, dataLink);
+            var update = Builders<DBModel>.Update.Push<Core.DB.Models.Link>(e => e.links, dataLink);
 
-            await _rastreoCollection.FindOneAndUpdateAsync(filter, update);
+            await _Collection.FindOneAndUpdateAsync(filter, update);
 
         }
 
@@ -47,25 +49,25 @@ namespace RastreoService.Core.DB.Query
 
         #region READ
 
-        public List<Core.DB.Models.RastreoDBModel> GetAllRastreo()
+        public List<DBModel> ReadAll()
         {
-            return _rastreoCollection.Find(new BsonDocument()).ToList();
+            return _Collection.Find(new BsonDocument()).ToList();
         }
 
-        public List<Core.DB.Models.RastreoDBModel> GetRastreoByField(string fieldName, string fieldValue)
+        public List<DBModel> ReadByField(string fieldName, string fieldValue)
         {
-            var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq(fieldName, fieldValue);
-            var result = _rastreoCollection.Find(filter).ToList();
+            var filter = Builders<DBModel>.Filter.Eq(fieldName, fieldValue);
+            var result = _Collection.Find(filter).ToList();
 
             return result;
         }
 
-        public Core.DB.Models.RastreoDBModel GetRastreoById(string id)
+        public DBModel ReadById(string id)
         {
             try
             {
-                var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
-                var data = _rastreoCollection.Find(filter).FirstOrDefault();
+                var filter = Builders<DBModel>.Filter.Eq("_id", ObjectId.Parse(id));
+                var data = _Collection.Find(filter).FirstOrDefault();
                 return data;
             }
             catch
@@ -74,9 +76,9 @@ namespace RastreoService.Core.DB.Query
             }
         }
 
-        public List<Core.DB.Models.RastreoDBModel> GetRastreo(int startingFrom, int count) //ESTE CREO QUE NO SE ESTA USANDO
+        public List<DBModel> GetRastreo(int startingFrom, int count) //ESTE CREO QUE NO SE ESTA USANDO
         {
-            var result = _rastreoCollection.Find(new BsonDocument())
+            var result = _Collection.Find(new BsonDocument())
             .Skip(startingFrom)
             .Limit(count)
             .ToList();
@@ -88,12 +90,12 @@ namespace RastreoService.Core.DB.Query
 
         #region UPDATE
 
-        public bool UpdateRastreo(string id, string udateFieldName, string updateFieldValue)
+        public bool Update(string id, string udateFieldName, string updateFieldValue)
         {
-            var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
-            var update = Builders<Core.DB.Models.RastreoDBModel>.Update.Set(udateFieldName, updateFieldValue);
+            var filter = Builders<DBModel>.Filter.Eq("_id", ObjectId.Parse(id));
+            var update = Builders<DBModel>.Update.Set(udateFieldName, updateFieldValue);
 
-            var result = _rastreoCollection.UpdateOne(filter, update);
+            var result = _Collection.UpdateOne(filter, update);
 
             return result.ModifiedCount != 0;
         }
@@ -103,10 +105,10 @@ namespace RastreoService.Core.DB.Query
 
         #region DELETE
 
-        public bool DeleteRastreoById(string id)
+        public bool DeleteById(string id)
         {
-            var filter = Builders<Core.DB.Models.RastreoDBModel>.Filter.Eq("_id", ObjectId.Parse(id));
-            var result = _rastreoCollection.DeleteOne(filter);
+            var filter = Builders<DBModel>.Filter.Eq("_id", ObjectId.Parse(id));
+            var result = _Collection.DeleteOne(filter);
             return result.DeletedCount != 0;
         }
 

@@ -9,21 +9,21 @@ namespace RastreoService.Core
     {
         #region CREATE
 
-        public string CreateContacto(Core.DB.Models.RastreoDBModel data)
+        public string Create(Core.DB.Models.RastreoDBModel data)
         {
 
             Core.DB.Query.RastreoQuery qCreate = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
             //qCreate.Create(data); //El metodo antiguo que funciona
-            qCreate.InserRastreo(data);//Nuevo metodo
+            qCreate.Create(data);//Nuevo metodo
             return "OK!";
         }
 
-        public void AddLink(Core.DB.Models.Link link, string rastreoID)
+        public void CreateToArray(Core.DB.Models.Link link, string rastreoID)
         {
 
             Core.DB.Query.RastreoQuery qAddLink = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
-            qAddLink.AddLink(link, rastreoID);
+            qAddLink.CreateToArray(link, rastreoID);
 
         }
 
@@ -35,23 +35,23 @@ namespace RastreoService.Core
         {
             Core.DB.Query.RastreoQuery qReadAll = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
-            return qReadAll.GetAllRastreo();//Nuevo metodo
+            return qReadAll.ReadAll();//Nuevo metodo
         }
 
-        public Core.DB.Models.RastreoDBModel ReadId(string id)
+        public Core.DB.Models.RastreoDBModel ReadById(string id)
         {
 
             Core.DB.Query.RastreoQuery qReadId = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
-            var data = qReadId.GetRastreoById(id);
+            var data = qReadId.ReadById(id);
             return data;
         }
 
-        public List<Core.DB.Models.RastreoDBModel> ReadValue(string fieldName, string fieldValue)
+        public List<Core.DB.Models.RastreoDBModel> ReadByField(string fieldName, string fieldValue)
         {
             Core.DB.Query.RastreoQuery qReadId = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
 
-            var data = qReadId.GetRastreoByField(fieldName, fieldValue);
+            var data = qReadId.ReadByField(fieldName, fieldValue);
             return data;
 
         }
@@ -62,7 +62,7 @@ namespace RastreoService.Core
         {
 
             Core.DB.Query.RastreoQuery qUpdate = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
-            qUpdate.UpdateRastreo(id, updateFieldName, updateFieldValue);
+            qUpdate.Update(id, updateFieldName, updateFieldValue);
 
         }
 
@@ -70,10 +70,10 @@ namespace RastreoService.Core
 
         #region DELETE
 
-        public void Delete(string id)
+        public void DeleteById(string id)
         {
             Core.DB.Query.RastreoQuery qDelete = new Core.DB.Query.RastreoQuery("mongodb://51.83.73.69:27017");
-            qDelete.DeleteRastreoById(id);
+            qDelete.DeleteById(id);
         }
 
         #endregion

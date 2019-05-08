@@ -10,9 +10,6 @@ namespace RastreoService
         public static void Register(HttpConfiguration config)
         {
 
-            var hola = ""; //PROBAR SI AQUI PUEDE IR RABBIT MQ
-            // Configuración y servicios de API web
-
             // Rutas de API web
             config.MapHttpAttributeRoutes();
 
