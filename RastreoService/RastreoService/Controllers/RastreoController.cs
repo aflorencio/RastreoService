@@ -9,6 +9,9 @@ using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
 
+using DBModel = RastreoService.Core.DB.Models.RastreoDBModel;
+
+
 namespace RastreoService.Controllers
 {
     public class RastreoController : ApiController
@@ -21,14 +24,14 @@ namespace RastreoService.Controllers
         // GET: api/Rastreo
         [HttpGet]
         [Route("api/rastreo")]
-        public List<Core.DB.Models.RastreoDBModel> Get()
+        public List<DBModel> Get()
         {
             var data = _.ReadAll();
             return data;
-        } //POR AHORA SOLO DE TODOS LOS CAMPOS BORRAR CUANDO ESTEN TODOS LOS DATOS DEL CONTROLADOR
+        } 
 
         // GET: api/Rastreo/5
-        public Core.DB.Models.RastreoDBModel Get(string id)
+        public DBModel Get(string id)
         {
             var data = _.ReadById(id);
 
@@ -43,42 +46,33 @@ namespace RastreoService.Controllers
         // POST: api/Rastreo
         [HttpPost]
         [Route("api/rastreo")]
-        public async Task<HttpResponseMessage> Post(HttpRequestMessage request)
+        public string Post(FormDataCollection value)
         {
-            var jsonString = await request.Content.ReadAsStringAsync();
+            string[] words = value.Get("idContactoService").ToString().Split(',');
 
-            Core.DB.Models.RastreoDBModel account = JsonConvert.DeserializeObject<Core.DB.Models.RastreoDBModel>(jsonString);
-            _.Create(account);
+            Core.DB.Models.RastreoDBModel data = new Core.DB.Models.RastreoDBModel();
+            List<ObjectId> contactoServiceList = new List<ObjectId>();
 
-            return new HttpResponseMessage(HttpStatusCode.Created);
+            foreach (string word in words)
+            {
+                contactoServiceList.Add(ObjectId.Parse(word));
+            }
 
-            //string[] words = value.Get("idContactoService").ToString().Split(',');
+            data.idContactoService = contactoServiceList;
+            data.finalizado = value.Get("finalizado") == "true" ? true : false;
+            data.idTicketService = value.Get("idTicketService");
+            data.keyWord = value.Get("keyWord");
 
-            //Core.DB.Models.RastreoDBModel data = new Core.DB.Models.RastreoDBModel();
-            //List<ObjectId> contactoServiceList = new List<ObjectId>();
+            _.Create(data);
 
-            //foreach (string word in words)
-            //{
-            //    contactoServiceList.Add(ObjectId.Parse(word));
-            //}
-
-            //data.idContactoService = contactoServiceList;
-            //data.finalizado = value.Get("finalizado") == "true" ? true : false;
-            //data.idTicketService = value.Get("idTicketService");
-            //data.keyWord = value.Get("keyWord");
-
-            //_.CreateContacto(data);
-
-            //return "OK!";
-
+            return "OK!";
         }
 
         // POST: api/Rastreo/ID
         [HttpPost]
         [Route("api/Rastreo/{id}")]
-        public string Post(string id, FormDataCollection value)
+        public string Post(FormDataCollection value, string id)
         {
-
             Core.DB.Models.Link linkes = new Core.DB.Models.Link();
 
             linkes.url = value.Get("url");
@@ -101,16 +95,32 @@ namespace RastreoService.Controllers
         #region PUT
 
         // PUT: api/Rastreo/5
-        public void Put(int id, [FromBody]string value)
+        [HttpPut]
+        [Route("api/Rastreo/{id}")]
+        public string Put(string id, FormDataCollection value)
         {
-        }
+            var name = value.FirstOrDefault().Key.ToString();
+            var valor = value.FirstOrDefault().Value.ToString();
 
+            DBModel obj = new DBModel();
+            var existeMetodo = obj.GetType().GetProperty(name) == null ? false : true;
+            if (existeMetodo == true)
+            {
+                _.Update(id, name, valor);
+                return "OK!";
+            }
+
+            return "Error";
+
+        }
 
         #endregion
 
         #region DELETE
 
         // DELETE: api/Rastreo/5
+        [HttpDelete]
+        [Route("api/Rastreo/{id}")]
         public void Delete(string id)
         {
             _.DeleteById(id);
