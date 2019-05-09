@@ -50,15 +50,15 @@ namespace RastreoService.Controllers
         {
             string[] words = value.Get("idContactoService").ToString().Split(',');
 
-            Core.DB.Models.RastreoDBModel data = new Core.DB.Models.RastreoDBModel();
-            List<ObjectId> contactoServiceList = new List<ObjectId>();
+            DBModel data = new DBModel();
 
+            List<ObjectId> contactoServiceList = new List<ObjectId>();
             foreach (string word in words)
             {
                 contactoServiceList.Add(ObjectId.Parse(word));
             }
-
             data.idContactoService = contactoServiceList;
+
             data.finalizado = value.Get("finalizado") == "true" ? true : false;
             data.idTicketService = value.Get("idTicketService");
             data.keyWord = value.Get("keyWord");

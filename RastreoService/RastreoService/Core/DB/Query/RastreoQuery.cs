@@ -46,7 +46,6 @@ namespace RastreoService.Core.DB.Query
 
         #endregion
 
-
         #region READ
 
         public List<DBModel> ReadAll()
